@@ -1,0 +1,41 @@
+{
+    "name": "andreger/chess-position",
+    "description": "This library extract information of a chess position",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "André Gervásio",
+            "email": "andreger@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Andreger\\ChessPosition\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Andreger\\ChessPosition\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit tests"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Andreger\\ChessPosition\\ChessPositionServiceProvider"
+            ],
+            "aliases": {
+                "Stock": "Andreger\\ChessPosition\\Facades\\Position"
+            }
+        }
+    }
+}
