@@ -61,7 +61,7 @@ class Position
         $piecePlacement = $this->piecePlacement;
 
         for ($i = 1; $i <= 8; $i++) {
-            $piecePlacement = str_replace($i, str_repeat(0, $i), $piecePlacement);
+            $piecePlacement = str_replace($i, str_repeat(' ', $i), $piecePlacement);
         }
 
         $rows = explode('/', $piecePlacement);
@@ -69,8 +69,9 @@ class Position
             $cols = str_split($rows[$i]);
 
             for ($j = 0; $j <= 7; $j++) {
-                $this->squares[7-$i][$j] = $cols[$j];
+                $this->squares[7-$i][$j] = $cols[$j] != ' ' ? new Piece($cols[$j]) : null;
             }
         }
     }
+    
 }
