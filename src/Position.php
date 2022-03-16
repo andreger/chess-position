@@ -20,20 +20,64 @@ class Position
 
     private $squares;
 
+    /**
+     * Position constructor.
+     *
+     * @param string|null $fen
+     */
     public function __construct(?string $fen = null)
     {
         if ($fen) {
             $this->loadFen($fen);
         }
+
+        return $this;
     }
 
+    /**
+     * Load a string on FEN notation
+     *
+     * @param string $fen
+     * @return $this
+     */
     public function loadFen(string $fen)
     {
         $this->fen = $fen;
         $this->explodeFen($fen);
         $this->initSquares();
+
+        return $this;
     }
 
+    /**
+     * Get the piece on a square
+     *
+     * @param string $square Square on algebric notation
+     * @return Piece|null
+     */
+    public function get(string $square): ?Piece
+    {
+        $square = str_split($square);
+
+        switch ($square[0]) {
+            case 'a': $i = 0; break;
+            case 'b': $i = 1; break;
+            case 'c': $i = 2; break;
+            case 'd': $i = 3; break;
+            case 'e': $i = 4; break;
+            case 'f': $i = 5; break;
+            case 'g': $i = 6; break;
+            case 'h': $i = 7; break;
+        }
+
+        return $this->squares[$i][$square[1] - 1];
+    }
+
+    /**
+     * Explode Fen string and set class parameters
+     *
+     * @param string $fen
+     */
     private function explodeFen(string $fen)
     {
         $fen = explode(" ", $fen);
@@ -56,6 +100,9 @@ class Position
             $this->fullmoveClock = $fen[5];
     }
 
+    /**
+     * Init squares array
+     */
     private function initSquares()
     {
         $piecePlacement = $this->piecePlacement;
@@ -73,5 +120,5 @@ class Position
             }
         }
     }
-    
+
 }

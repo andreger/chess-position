@@ -4,14 +4,19 @@ namespace Andreger\ChessPosition;
 
 class Piece
 {
-    private $piece;
+    public $piece;
 
-    private $color;
+    public $color;
 
-    private $type;
+    public $type;
 
-    private $value;
+    public $value;
 
+    /**
+     * Piece constructor.
+     *
+     * @param string|null $piece
+     */
     public function __construct(?string $piece = null)
     {
         $this->piece = $piece;
@@ -19,6 +24,11 @@ class Piece
         $this->initTypeAndValue($piece);
     }
 
+    /**
+     * Set color parameter
+     *
+     * @param string|null $piece
+     */
     private function initColor(?string $piece = null)
     {
         $this->color = null;
@@ -28,6 +38,11 @@ class Piece
         }
     }
 
+    /**
+     * Set type and value parameters
+     *
+     * @param string|null $piece
+     */
     private function initTypeAndValue(?string $piece = null)
     {
         switch (strtolower($piece)) {
@@ -68,8 +83,4 @@ class Piece
         }
     }
 
-    public function piece()
-    {
-        return $this->piece;
-    }
 }
