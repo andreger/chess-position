@@ -25,6 +25,45 @@ class Piece
     }
 
     /**
+     * Check if a piece is white or black
+     *
+     * @param string $color Supported values: white, black, w, b
+     * @return bool
+     */
+    public function isColor(string $color): bool
+    {
+        if ($color == 'w') {
+            $color = 'white';
+        }
+
+        if ($color == 'b') {
+            $color = 'black';
+        }
+
+        return $this->color == $color;
+    }
+
+    /**
+     * Return true if piece is black
+     *
+     * @return bool
+     */
+    public function isBlack(): bool
+    {
+        return $this->isColor('black');
+    }
+
+    /**
+     * Return true if piece is white
+     *
+     * @return bool
+     */
+    public function isWhite(): bool
+    {
+        return $this->isColor('white');
+    }
+
+    /**
      * Set color parameter
      *
      * @param string|null $piece
@@ -53,7 +92,7 @@ class Piece
             }
             case 'q': {
                 $this->type = 'queen';
-                $this->value = 3;
+                $this->value = 9;
                 break;
             }
             case 'r': {

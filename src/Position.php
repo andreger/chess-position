@@ -55,7 +55,7 @@ class Position
      * @param string $square Square on algebric notation
      * @return Piece|null
      */
-    public function get(string $square): ?Piece
+    public function square(string $square): ?Piece
     {
         $square = str_split($square);
 
@@ -71,6 +71,35 @@ class Position
         }
 
         return $this->squares[$i][$square[1] - 1];
+    }
+
+    /**
+     * Sum material relative value of a color
+     *
+     * @param string $color
+     * @return int
+     */
+    public function materialValue(string $color)
+    {
+        $sum = 0;
+
+        foreach ($this->squares as $cols) {
+            foreach ($cols as $square) {
+                $sum += $square && $square->isColor($color) ? $square->value : 0;
+            }
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Get material difference value
+     *
+     * @return int
+     */
+    public function materialDiffValue(): int
+    {
+        return $this->materialValue('white') - $this->materialValue('black');
     }
 
     /**
