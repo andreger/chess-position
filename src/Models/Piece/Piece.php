@@ -1,10 +1,24 @@
 <?php
 
-namespace Andreger\ChessPosition;
+namespace Andreger\ChessPosition\Models\Piece;
+
+use Andreger\ChessPosition\Models\Square;
+use Andreger\ChessPosition\Services\SquareService;
 
 class Piece
 {
-    public $piece;
+    public const KING = 'king';
+    public const QUEEN = 'queen';
+    public const ROOK = 'rook';
+    public const BISHOP = 'bishop';
+    public const KNIGHT = 'knight';
+    public const PAWN = 'pawn';
+    public const WHITE = 'white';
+    public const BLACK = 'black';
+
+    public $code;
+
+    public $square;
 
     public $color;
 
@@ -12,16 +26,21 @@ class Piece
 
     public $value;
 
+    protected $squareService;
+
     /**
      * Piece constructor.
      *
-     * @param string|null $piece
+     * @param string $piece
      */
-    public function __construct(?string $piece = null)
+    public function __construct(string $code, Square $square)
     {
-        $this->piece = $piece;
-        $this->initColor($piece);
-        $this->initTypeAndValue($piece);
+        $this->squareService = new SquareService();
+
+        $this->code = $code;
+        $this->square = $square;
+        $this->initColor($code);
+        $this->initTypeAndValue($code);
     }
 
     /**
@@ -33,11 +52,11 @@ class Piece
     public function isColor(string $color): bool
     {
         if ($color == 'w') {
-            $color = 'white';
+            $color = self::WHITE;
         }
 
         if ($color == 'b') {
-            $color = 'black';
+            $color = self::BLACK;
         }
 
         return $this->color == $color;
@@ -50,7 +69,7 @@ class Piece
      */
     public function isBlack(): bool
     {
-        return $this->isColor('black');
+        return $this->isColor(self::BLACK);
     }
 
     /**
@@ -60,7 +79,12 @@ class Piece
      */
     public function isWhite(): bool
     {
-        return $this->isColor('white');
+        return $this->isColor(self::WHITE);
+    }
+
+    public function isOnCoordinate(int $row, int $col)
+    {
+        return $this->square->row == $row && $this->square->col == $col;
     }
 
     /**
@@ -73,7 +97,7 @@ class Piece
         $this->color = null;
 
         if ($piece != null) {
-            $this->color = ctype_lower($piece) ? 'black' : 'white';
+            $this->color = ctype_lower($piece) ? self::BLACK : self::WHITE;
         }
     }
 
@@ -86,32 +110,32 @@ class Piece
     {
         switch (strtolower($piece)) {
             case 'k': {
-                $this->type = 'king';
+                $this->type = self::KING;
                 $this->value = null;
                 break;
             }
             case 'q': {
-                $this->type = 'queen';
+                $this->type = self::QUEEN;
                 $this->value = 9;
                 break;
             }
             case 'r': {
-                $this->type = 'rook';
+                $this->type = self::ROOK;
                 $this->value = 5;
                 break;
             }
             case 'n': {
-                $this->type = 'knight';
+                $this->type = self::KNIGHT;
                 $this->value = 3;
                 break;
             }
             case 'b': {
-                $this->type = 'bishop';
+                $this->type = self::BISHOP;
                 $this->value = 3;
                 break;
             }
             case 'p': {
-                $this->type = 'pawn';
+                $this->type = self::PAWN;
                 $this->value = 1;
                 break;
             }

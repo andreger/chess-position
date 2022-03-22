@@ -1,6 +1,8 @@
 <?php
 
-namespace Andreger\ChessPosition;
+namespace Andreger\ChessPosition\Models;
+
+use Andreger\ChessPosition\Services\SquareService;
 
 class Position
 {
@@ -20,6 +22,8 @@ class Position
 
     private $squares;
 
+    private $squareService;
+
     /**
      * Position constructor.
      *
@@ -27,6 +31,8 @@ class Position
      */
     public function __construct(?string $fen = null)
     {
+        $this->squareService = new SquareService();
+
         if ($fen) {
             $this->loadFen($fen);
         }
@@ -49,28 +55,10 @@ class Position
         return $this;
     }
 
-    /**
-     * Get the piece on a square
-     *
-     * @param string $square Square on algebric notation
-     * @return Piece|null
-     */
-    public function square(string $square): ?Piece
+    public function piece(string $algebric)
     {
-        $square = str_split($square);
-
-        switch ($square[0]) {
-            case 'a': $i = 0; break;
-            case 'b': $i = 1; break;
-            case 'c': $i = 2; break;
-            case 'd': $i = 3; break;
-            case 'e': $i = 4; break;
-            case 'f': $i = 5; break;
-            case 'g': $i = 6; break;
-            case 'h': $i = 7; break;
-        }
-
-        return $this->squares[$i][$square[1] - 1];
+        $coords = $this->squareService->algebricToCoordenate($algebric);
+        return $this->squares[$coords->row][$coords->col]->piece;
     }
 
     /**
@@ -83,9 +71,12 @@ class Position
     {
         $sum = 0;
 
-        foreach ($this->squares as $cols) {
-            foreach ($cols as $square) {
-                $sum += $square && $square->isColor($color) ? $square->value : 0;
+        foreach ($this->squares as $row) {
+            foreach ($row as $square) {
+
+                if ($piece = $square->piece) {
+                    $sum += $piece->isColor($color) ? $piece->value : 0;
+                }
             }
         }
 
@@ -141,13 +132,18 @@ class Position
         }
 
         $rows = explode('/', $piecePlacement);
-        for ($i = 7; $i >= 0; $i--) {
-            $cols = str_split($rows[$i]);
 
-            for ($j = 0; $j <= 7; $j++) {
-                $this->squares[7-$i][$j] = $cols[$j] != ' ' ? new Piece($cols[$j]) : null;
+
+        $rows = array_reverse($rows);
+
+        for ($row = 0; $row < 8; $row++) {
+            $cols = str_split($rows[$row]);
+
+            for ($col = 0; $col < 8; $col++) {
+                $this->squares[$row][$col] = new Square($this, $cols[$col], $row, $col);
             }
         }
+
     }
 
 }
